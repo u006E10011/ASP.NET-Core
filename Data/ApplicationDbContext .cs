@@ -15,7 +15,6 @@ public class ApplicationDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Настраиваем таблицу Products
         modelBuilder.Entity<Product>(entity =>
         {
             entity.HasKey(e => e.Id);

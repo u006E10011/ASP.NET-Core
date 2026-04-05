@@ -1,13 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using Pomelo.EntityFrameworkCore.MySql;
 using Shop.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Отключаем HTTPS для контейнера
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-    serverOptions.ListenAnyIP(8080); // Только HTTP, без HTTPS
+    serverOptions.ListenAnyIP(8080);
 });
 
 builder.Services.AddRazorPages();
@@ -21,10 +19,8 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // app.UseHsts(); // КОММЕНТИРУЕМ
 }
 
-// app.UseHttpsRedirection(); // КОММЕНТИРУЕМ
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
