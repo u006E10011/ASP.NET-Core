@@ -1,0 +1,60 @@
+﻿@page
+@using Microsoft.EntityFrameworkCore
+@using Shop.Data
+@inject ApplicationDbContext DbContext
+
+<h1>Проверка подключения к MySQL</h1>
+
+@{
+    try
+    {
+        var canConnect = await DbContext.Database.CanConnectAsync();
+        if (canConnect)
+        {
+            <div style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin: 10px 0;">
+                <strong>✅ Успешное подключение к MySQL!</strong><br />
+                Сервер: @DbContext.Database.GetDbConnection().DataSource<br />
+                База данных: @DbContext.Database.GetDbConnection().Database
+            </div>
+
+            <h2>📦 Товары в базе данных:</h2>
+
+            @if (await DbContext.Products.AnyAsync())
+            {
+                <table style="border-collapse: collapse; width: 100%;">
+                    <tr style="background-color: #f2f2f2;">
+                        <th style="border: 1px solid #ddd; padding: 8px;">ID</th>
+                        <th style="border: 1px solid #ddd; padding: 8px;">Название</th>
+                        <th style="border: 1px solid #ddd; padding: 8px;">Цена</th>
+                    </tr>
+                    @foreach (var product in await DbContext.Products.ToListAsync())
+                    {
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;">@product.Id</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">@product.Name</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">@product.Price ₽</td>
+                        </tr>
+                    }
+                </table>
+            }
+            else
+            {
+                <p>Нет товаров в базе данных.</p>
+            }
+        }
+        else
+        {
+            <div style="background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin: 10px 0;">
+                <strong>❌ Не удалось подключиться к MySQL</strong><br />
+                Проверьте, запущен ли контейнер с MySQL.
+            </div>
+        }
+    }
+    catch (Exception ex)
+    {
+        <div style="background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin: 10px 0;">
+            <strong>❌ Ошибка подключения:</strong><br />
+            @ex.Message
+        </div>
+    }
+}
