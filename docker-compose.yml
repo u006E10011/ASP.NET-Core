@@ -9,11 +9,11 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "3306:3306"
+      - "${DB_PORT}:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - shop-network
+      - web-app-network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
       timeout: 20s
@@ -36,10 +36,10 @@ services:
       db:
         condition: service_healthy
     networks:
-      - shop-network
+      - web-app-network
 
 networks:
-  shop-network:
+  web-app-network:
     driver: bridge
 
 volumes:

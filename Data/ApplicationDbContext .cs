@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Shop.Data;
+namespace Ryadevn.Data;
 
 public class ApplicationDbContext : DbContext
 {

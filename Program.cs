@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Shop.Data;
+using Ryadevn.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
