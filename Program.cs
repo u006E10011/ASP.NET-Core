@@ -11,10 +11,13 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
 builder.Services.AddRazorPages();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+Console.WriteLine($"Connection String: {connectionString}");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 var app = builder.Build();
+
+
 
 if (!app.Environment.IsDevelopment())
 {

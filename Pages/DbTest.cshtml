@@ -1,26 +1,25 @@
-﻿@page
+@page
+@model Ryadevn.Pages.DbTestModel
 @using Microsoft.EntityFrameworkCore
-@using Ryadevn
 @using Ryadevn.Data
-@inject ApplicationDbContext DbContext
 
 <h1>Проверка подключения к MySQL</h1>
 
 @{
     try
     {
-        var canConnect = await DbContext.Database.CanConnectAsync();
+        var canConnect = await Model.DbContext.Database.CanConnectAsync();
         if (canConnect)
         {
             <div style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin: 10px 0;">
                 <strong>✅ Успешное подключение к MySQL!</strong><br />
-                Сервер: @DbContext.Database.GetDbConnection().DataSource<br />
-                База данных: @DbContext.Database.GetDbConnection().Database
+                Сервер: @Model.DbContext.Database.GetDbConnection().DataSource<br />
+                База данных: @Model.DbContext.Database.GetDbConnection().Database
             </div>
 
             <h2>📦 Товары в базе данных:</h2>
 
-            @if (await DbContext.Products.AnyAsync())
+            @if (Model.Products.Any())
             {
                 <table style="border-collapse: collapse; width: 100%;">
                     <tr style="background-color: #f2f2f2;">
@@ -28,7 +27,7 @@
                         <th style="border: 1px solid #ddd; padding: 8px;">Название</th>
                         <th style="border: 1px solid #ddd; padding: 8px;">Цена</th>
                     </tr>
-                    @foreach (var product in await DbContext.Products.ToListAsync())
+                    @foreach (var product in Model.Products)
                     {
                         <tr>
                             <td style="border: 1px solid #ddd; padding: 8px;">@product.Id</td>
@@ -42,6 +41,41 @@
             {
                 <p>Нет товаров в базе данных.</p>
             }
+
+            <button id="showAddProductForm" class="btn btn-primary" style="margin-top: 20px;">Добавить товар</button>
+
+            <div id="addProductForm" style="display: none; margin-top: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
+                <h3>Добавить новый товар</h3>
+                <form method="post" asp-page-handler="AddProduct">
+                    <div class="mb-3">
+                        <label for="NewProduct_Id" class="form-label">ID:</label>
+                        <input type="number" class="form-control" id="NewProduct_Id" asp-for="NewProduct.Id" />
+                        <span asp-validation-for="NewProduct.Id" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="NewProduct_Name" class="form-label">Название:</label>
+                        <input type="text" class="form-control" id="NewProduct_Name" asp-for="NewProduct.Name" />
+                        <span asp-validation-for="NewProduct.Name" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="NewProduct_Price" class="form-label">Цена:</label>
+                        <input type="number" step="0.01" class="form-control" id="NewProduct_Price" asp-for="NewProduct.Price" />
+                        <span asp-validation-for="NewProduct.Price" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="btn btn-success">Сохранить</button>
+                </form>
+            </div>
+
+            <script>
+                document.getElementById('showAddProductForm').addEventListener('click', function () {
+                    var form = document.getElementById('addProductForm');
+                    if (form.style.display === 'none') {
+                        form.style.display = 'block';
+                    } else {
+                        form.style.display = 'none';
+                    }
+                });
+            </script>
         }
         else
         {
