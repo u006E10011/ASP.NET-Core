@@ -9,13 +9,13 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "${DB_PORT}:3306"
+      - "${DB_PORT}:${DB_PORT}"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
       - web-app-network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}", "--port=${DB_PORT}"]
       timeout: 20s
       retries: 10
       interval: 10s
